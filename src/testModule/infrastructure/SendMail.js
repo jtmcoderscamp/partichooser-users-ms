@@ -18,8 +18,8 @@ export default async function main() {
     // auth: {
     //   xoauth2: xoauth2.createXOAuth2Generator({
     //       user: 'tereska.skrzypczyk@gmail.com', 
-    //       clientId: "936360633378-0draafi4tn84ckhdu2e7582hgt8r5qt8.apps.googleusercontent.com",
-    //       clientSecret: "3g0REZvHy-kdersxpQ5pZQ0H", 
+    //       clientId: process.env.ID,
+    //       clientSecret: process.env.SECRET, 
     //       refreshToken: ""
     //   })
     // }
