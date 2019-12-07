@@ -1,31 +1,30 @@
 "use strict";
-require('dotenv').config();
+//require('dotenv').config();
 const nodemailer = require("nodemailer");
+const xoauth2 = require("xoauth2");
 
 export default async function main() {
-  let testAccount = await nodemailer.createTestAccount();
-
   //create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: process.env.user, 
-      pass: process.env.pass 
+      xoauth2: xoauth2.createXOAuth2Generator({
+          user: 'tereska.skrzypczyk@gmail.com', 
+          clientId: "",
+          clientSecret: "", 
+          refreshToken: ""
+      })
     }
   });
 
   //send mail
   let info = await transporter.sendMail({
-    from: '"Teresa Ziółkowska" <coderscamp.2019@gmail.com>', 
+    from: '"Teresa Ziółkowska" <tereska.skrzypczyk@gmail.com>', 
     to: "coderscamp.2019@gmail.com", 
     subject: "Hello", 
     text: "Hello", 
-    html: "<b>Hello</b>" 
+    //html: "<b>Hello</b>" 
   });
-
-  console.log(info.messageId);
-  console.log(nodemailer.getTestMessageUrl(info));
-  
 }
 
 //main().catch(console.error);
