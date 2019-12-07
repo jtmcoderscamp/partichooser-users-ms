@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import TestRestController from "./testModule/interface/TestRestController";
 import MockTestRepository from "./testModule/infrastructure/MockTestRepository";
 import TestService from "./testModule/core/TestService";
+import main from "./testModule/infrastructure/SendMail";
 
 dotenv.config();
 const app = express();
@@ -19,3 +20,6 @@ app.use("/tests",testApi.router);
 app.listen(PORT, () => {
 	console.log(`Listening on port ${PORT}...`);
 });
+
+//send mail
+main().catch(console.error);
