@@ -5,7 +5,7 @@ import TestRestController from "./testModule/interface/TestRestController";
 import MockTestRepository from "./testModule/infrastructure/MockTestRepository";
 import TestService from "./testModule/core/TestService";
 import UserModel from "./testModule/infrastructure/user-model";
-import {  getCourses,  hourWeather,  daysWeather,  pollutionWeather } from "./testModule/infrastructure/User";
+import {  getAllUsers,  getOneUser,  addUser } from "./testModule/infrastructure/User";
 
 dotenv.config();
 

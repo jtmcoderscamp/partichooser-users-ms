@@ -28,7 +28,7 @@ export async function getOneUser() {
 
 
 
-export async function addUser(id,nameUser,surnameUser,emailUser,rolesUser,){
+export async function addUser(id,nameUser,surnameUser,emailUser,rolesUser){
   const user = new User({
     uuid:id,
     name: nameUser,
