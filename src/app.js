@@ -4,6 +4,8 @@ import mongoose from "mongoose"
 import TestRestController from "./testModule/interface/TestRestController";
 import MockTestRepository from "./testModule/infrastructure/MockTestRepository";
 import TestService from "./testModule/core/TestService";
+import UserModel from "./testModule/infrastructure/user-model";
+import {  getCourses,  hourWeather,  daysWeather,  pollutionWeather } from "./testModule/infrastructure/User";
 
 dotenv.config();
 
@@ -16,10 +18,6 @@ const testRepositoryImplementation = new MockTestRepository();
 const testServiceImplementation = new TestService(testRepositoryImplementation);
 const testApi = new TestRestController(testServiceImplementation);
 
-mongoose.connect(db)
-  .then(() => console.log('Connected to MongoDB...'))
-  .catch(err => console.error('Could not connect to MongoDB...'));
-
 
 //wiring up the routes
 app.use("/tests",testApi.router);
@@ -27,3 +25,11 @@ app.use("/tests",testApi.router);
 app.listen(PORT, () => {
 	console.log(`Listening on port ${PORT}...`);
 });
+
+//connect db
+mongoose.connect(db)
+  .then(() => console.log('Connected to MongoDB...'))
+  .catch(err => console.error('Could not connect to MongoDB...'));
+
+const oneUsers = new Mentor();
+oneUsers.run();
