@@ -4,6 +4,8 @@ const Joi = require('joi');
 const express = require('express');
 const router = express.Router();
 const moongose = require('mongoose');
+const _=require('lodash');
+//const User = require ('...UserRepository')
 
 router.post('/', async (req, res) =>
 {
@@ -17,7 +19,8 @@ router.post('/', async (req, res) =>
     if (!validPassword) return resizeBy.status(400).send('Invalid email or pasword.');
 
     //pierwszy argument to to co chcemy zakodowac
-    const token = jwt.sign({ _id: user._id }, 'samplejwtprivatekey'); // poczytac jeszcze o tym
+    const token = jwt.sign({ _id: user._id }, 'JWT_SECRET'); // jak zwrocic ten JWT secret 
+    //- mosh zrobil to przez biblioteke config
 
     res.send(token);
 
