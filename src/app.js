@@ -4,8 +4,8 @@ import mongoose from "mongoose"
 import TestRestController from "./testModule/interface/TestRestController";
 import MockTestRepository from "./testModule/infrastructure/MockTestRepository";
 import TestService from "./testModule/core/TestService";
-import UserModel from "./testModule/infrastructure/user-model";
 import {  getAllUsers,  getOneUser,  addUser } from "./testModule/infrastructure/User";
+import User from "./testModule/infrastructure/user-model"
 
 dotenv.config();
 
@@ -31,5 +31,4 @@ mongoose.connect(db)
   .then(() => console.log('Connected to MongoDB...'))
   .catch(err => console.error('Could not connect to MongoDB...'));
 
-const oneUsers = new Mentor();
-oneUsers.run();
+  addUser('18','Jane','Smith','23mail@gmail.com',['mentor']);
