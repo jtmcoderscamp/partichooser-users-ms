@@ -1,11 +1,12 @@
 import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose"
+import MongoDB from "mongodb";
 import TestRestController from "./testModule/interface/TestRestController";
 import MockTestRepository from "./testModule/infrastructure/MockTestRepository";
 import TestService from "./testModule/core/TestService";
 import UserRepository from "./userModule/infrastructure/UserRepository ";
-//import UserEntity from "./userModule/infrastructure/userModel"
+import UserEntity from "./userModule/infrastructure/userModel"
 
 dotenv.config();
 
@@ -27,9 +28,14 @@ app.listen(PORT, () => {
 });
 
 //connect db
-mongoose.connect(db)
+mongoose.connect(process.env.db)
   .then(() => console.log('Connected to MongoDB...'))
   .catch(err => console.error('Could not connect to MongoDB...'));
 
 const userRepository = new UserRepository();
-userRepository.addUser('47','Anne','Connel','annc@gmail.com','mentor')
+//userRepository.addUser('13','Barry','Parker','marvel@gmail.com','mentor');
+
+//userRepository.showAllUsers();
+userRepository.showUsers('Parker');
+userRepository.showUsers('12');
+
