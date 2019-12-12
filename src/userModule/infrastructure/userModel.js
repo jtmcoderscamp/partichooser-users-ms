@@ -28,5 +28,5 @@ import mongoose from "mongoose";
         }
     });
   
-    export default User= mongoose.model('User', userSchema);
-   
+    const UserEntity = mongoose.model('User', userSchema);
+    export default UserEntity;   
