@@ -4,13 +4,16 @@ import User from "./domain/User";
 /**
  * An abstract class describing the expected behavior of PasswordService implementations
  */
-export default class PasswordServicePort {
+export default class PasswordServicePort
+{
     /**
      * Constructor taking an object of a class inheriting after UserRepositoryPort as an argument
      * @param {UserRepositoryPort} userRepository 
      */
-    constructor(userRepository) {
-        if (new.target === UserServicePort) {
+    constructor(userRepository)
+    {
+        if (new.target === UserServicePort) 
+        {
             throw new Error("Attempting to create an instance of an abstract class.");
         }
     }
@@ -21,8 +24,12 @@ export default class PasswordServicePort {
      * @param {string} password - the password (not yet hashed) of the user
      * @returns {Promise<User>} 
      */
-    async logIn(email, password) {
+    async logIn(email, password)
+    {
         throw new Error("Attempting to call an abstract method!");
+
+
+
     }
 
     /**
@@ -32,8 +39,11 @@ export default class PasswordServicePort {
      * @param {string} newPassword - new password
      * @returns {Promise<User>} 
      */
-    async changePassword(email, oldPassword, newPassword) {
+    async changePassword(email, oldPassword, newPassword)
+    {
         throw new Error("Attempting to call an abstract method!");
+
+
     }
 
     /**
@@ -41,8 +51,11 @@ export default class PasswordServicePort {
      * @param {string} uuid - the UUID specifying the user
      * @param {string} newPassword - new password
      */
-    async setPassword(uuid, newPassword) {
+    async setPassword(uuid, newPassword)
+    {
         throw new Error("Attempting to call an abstract method!");
+
+
     }
 
 }
