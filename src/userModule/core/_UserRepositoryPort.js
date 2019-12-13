@@ -20,10 +20,9 @@ export default class UserRepositoryPort {
     /**
      * A method that retrieves the specified user from the database based on login data
      * @param {string} email - the unique email of the user
-     * @param {string} password - the hashed password of the user
      * @returns {Promise<User>} 
      */
-    async selectByEmailAndPassword(email, password) {
+    async selectByEmail(email) {
         throw new Error("Attempting to call an abstract method!");
     }
 
