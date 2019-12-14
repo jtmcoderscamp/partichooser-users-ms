@@ -3,8 +3,8 @@ import dotenv from "dotenv";
 import TestRestController from "./testModule/interface/TestRestController";
 import MockTestRepository from "./testModule/infrastructure/MockTestRepository";
 import TestService from "./testModule/core/TestService";
-import auth from "./routes/auth";
-import hash from "./routes/hash";
+import auth from "./userModule/routes/auth";
+import hash from "./userModule/routes/hash";
 
 dotenv.config();
 const app = express();
