@@ -22,4 +22,7 @@ app.listen(PORT, () => {
 });
 
 //send mail
-main().catch(console.error);
+//version I
+main();
+//version II
+//main();
