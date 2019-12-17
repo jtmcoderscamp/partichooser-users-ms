@@ -1,7 +1,5 @@
 import UserRepositoryPort from "./_UserRepositoryPort";
 import User from "./domain/User";
-import bcrypt from "bcryptjs";
-
 /**
  * An abstract class describing the expected behavior of PasswordService implementations
  */
@@ -11,7 +9,6 @@ export default class PasswordServicePort
      * Constructor taking an object of a class inheriting after UserRepositoryPort as an argument
      * @param {UserRepositoryPort} userRepository 
      */
-
     constructor(userRepository)
     {
         if (new.target === UserServicePort) 
@@ -19,7 +16,6 @@ export default class PasswordServicePort
             throw new Error("Attempting to create an instance of an abstract class.");
         }
     }
-
     /**
      * A method that returns the data of the user trying to log in (as long as email and password combination is right)
      * @param {string} email - the unique email of the user
@@ -29,17 +25,7 @@ export default class PasswordServicePort
     async logIn(email, password)
     {
         throw new Error("Attempting to call an abstract method!");
-        let user = await userRepository.selectByEmail(email);
-       //let user = await User.findOne({ email: email })
-
-        let salt = bcrypt.genSalt(10);
-        password = bcrypt.hash(password,salt);
-        const validPassword = await bcrypt.compare(password, user.password);
-        if (validPassword) return user;
-        
-       // return resizeBy.status(400).send('Invalid email or pasword.');
     }
-
     /**
      * The method that performs user credentials validation and password change
      * @param {string} email - the unique email of the user changing password
@@ -50,15 +36,7 @@ export default class PasswordServicePort
     async changePassword(email, oldPassword, newPassword)
     {
         throw new Error("Attempting to call an abstract method!");
-        let user = await userRepository.selectByEmail(email);
-        const validPassword = await bcrypt.compare(oldPassword, user.password);
-        if (validPassword) 
-        {
-            user.password=newPassword;
-        }
-        return user;
     }
-
     /**
      * The method that forcefully sets a new password for the specified user
      * @param {string} uuid - the UUID specifying the user
@@ -67,11 +45,5 @@ export default class PasswordServicePort
     async setPassword(uuid, newPassword)
     {
         throw new Error("Attempting to call an abstract method!");
-        let user = await userRepository.selectByUuid(uuid);
-        let salt = bcrypt.genSalt(10);
-        newPassword = bcrypt.hash(newPassword,salt);
-        user.password=newPassword;
-        return user;
     }
-
 }
