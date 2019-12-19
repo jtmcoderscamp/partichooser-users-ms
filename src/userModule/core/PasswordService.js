@@ -14,26 +14,31 @@ export default class PasswordService extends PasswordServicePort
     async logIn(email, password)
     {
         let user = await this.userRepository.selectByEmail(email);
-        //what should return if user is not find
+        if (!user) return null;
+
         let salt = bcrypt.genSalt(10);
         password = bcrypt.hash(password, salt);
         const validPassword = await bcrypt.compare(password, user.password);
         if (validPassword) return user;
-        //what should return if user is data is not valid?
+        else return null;
+        
         
     }
 
     async changePassword(email, oldPassword, newPassword)
     {
         let user = await this.userRepository.selectByEmail(email);
+        if (!user) return null;
         //what should return if user is not find
         //are passwords hashed?
         const validPassword = await bcrypt.compare(oldPassword, user.password);
         if (validPassword) 
         {
             user.password = newPassword;
+            await user.save();
+            return user;
         }
-        return user;
+        else return null;
     }
 
     async setPassword(uuid, newPassword)

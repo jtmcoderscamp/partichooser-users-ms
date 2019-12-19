@@ -3,17 +3,18 @@ const Joi = require('joi');
 const express = require('express');
 const router = express.Router();
 const _= require ('lodash');
-import passwordService from ".core/domain/PasswordService";
+import passwordService from "../core/PasswordService";
 
 
 
 router.post('/', async (req, res) =>
 {
+    let service = new passwordService;
     const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
-
-    let user = await passwordService.logIn(req.body.email, req.body.password);
-    if (!user) return res.status(400).send('Invalid email or pasword.');
+   
+    let user = await service.logIn(req.body.email, req.body.password);
+    if (!user) return res.status(400).send('Invalid email or password.');
 
     //pierwszy argument to to co chcemy zakodowac
     const token = jwt.sign({ _id: user._id }, 'JWT_SECRET'); // jak zwrocic ten JWT secret 
