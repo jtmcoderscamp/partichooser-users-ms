@@ -29,4 +29,4 @@ function validate(req)
 
 }
 
-module.exports = router;
+export default router;
