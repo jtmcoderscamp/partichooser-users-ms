@@ -25,7 +25,12 @@ import mongoose from "mongoose";
           type:[String],
           required:true,
           enum: ['admin', 'mentor'] 
-        }
+        },
+        password:{
+          type:String,
+          unique:true,
+          //required:true;
+        },
     });
   
     const UserEntity = mongoose.model('User', userSchema);
