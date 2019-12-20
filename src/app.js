@@ -5,7 +5,7 @@ import MongoDB from "mongodb";
 import TestRestController from "./testModule/interface/TestRestController";
 import MockTestRepository from "./testModule/infrastructure/MockTestRepository";
 import TestService from "./testModule/core/TestService";
-import UserRepository from "./userModule/infrastructure/UserRepository ";
+import UserRepository from "./userModule/infrastructure/UserRepository";
 import UserEntity from "./userModule/infrastructure/userModel"
 
 dotenv.config();
@@ -33,9 +33,13 @@ mongoose.connect(process.env.db)
   .catch(err => console.error('Could not connect to MongoDB...'));
 
 const userRepository = new UserRepository();
-//userRepository.addUser('13','Barry','Parker','marvel@gmail.com','mentor');
+//userRepository.addUser('15','Kevin','Sam','KSWD@gmail.com','mentor');
 
 //userRepository.showAllUsers();
-userRepository.showUsers('Parker');
-userRepository.showUsers('12');
+ //userRepository.selectByEmail('2345mail@gmail.com');
+ //userRepository.selectByUuid('12');
+ userRepository.updatePassword('12','hasl123');
+ userRepository.selectByUuid('12');
+
+
 

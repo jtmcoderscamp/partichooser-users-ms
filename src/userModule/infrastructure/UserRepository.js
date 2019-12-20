@@ -22,13 +22,14 @@ export default class UserRepository extends UserRepositoryPort{
     }
 
         
-    async  addNewUser(id,nameUser,surnameUser,emailUser,rolesUser){
+    async  addNewUser(id,nameUser,surnameUser,emailUser,rolesUser, password){
         const user = new UserEntity({
           uuid:id,
           name: nameUser,
           surname: surnameUser,
           email:emailUser,
-          roles: rolesUser
+          roles: rolesUser,
+          pass:password
         });
       
         const result= await user.save();
@@ -57,7 +58,7 @@ export default class UserRepository extends UserRepositoryPort{
     }
 
     async updatePassword(uuid, password) {
-        const user = await UserEntity.findByIdAndUpdate(uuid,{$set:{password:password}})
+        const user = await UserEntity.findByIdAndUpdate(uuid,{$set:{pass:'password'}})
     }
 
 
