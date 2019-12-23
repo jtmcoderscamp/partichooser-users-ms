@@ -18,10 +18,11 @@ const testServiceImplementation = new TestService(testRepositoryImplementation);
 const testApi = new TestRestController(testServiceImplementation);
 
 //wiring up the routes
+app.use(express.json());
 app.use("/tests",testApi.router);
-app.use('/auth', auth);
-app.use('/changePas', changePas);
-app.use('/newPas', newPas);
+app.use('/api/auth', auth);
+app.use('/api/changePas', changePas);
+app.use('/api/newPas', newPas);
 
 app.listen(PORT, () => {
 	console.log(`Listening on port ${PORT}...`);

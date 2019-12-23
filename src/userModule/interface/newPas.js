@@ -8,18 +8,16 @@ import passwordService from "../core/PasswordService";
 router.post('/', async (req, res) => 
 {
     let service = new passwordService;
-    const { error } = validate(req.body);
+    const { error } = validateData(req.body);
     if (error) return res.status(400).send(error.details[0].message)
 
     let user = await service.setPassword(req.body.uuid, req.body.newPassword);
     if (!user) return res.status(400).send("User not find");
-
-    res.send(_.pick(user, ['_id', 'name', 'email']));
-    // co zwracamy?
-
+    else return res.sendStatus(200);
+    // res.sendStatus(200) // equivalent to res.status(200).send('OK')
 });
 
-function validate(req)
+function validateData(req)
 {
     const schema =
     {

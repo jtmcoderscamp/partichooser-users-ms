@@ -16,26 +16,20 @@ export default class PasswordService extends PasswordServicePort
         let user = await this.userRepository.selectByEmail(email);
         if (!user) return null;
 
-        let salt = bcrypt.genSalt(10);
-        password = bcrypt.hash(password, salt);
         const validPassword = await bcrypt.compare(password, user.password);
-        if (validPassword) return user;
+        if (validPassword) return user; 
         else return null;
-        
-        
     }
 
     async changePassword(email, oldPassword, newPassword)
     {
         let user = await this.userRepository.selectByEmail(email);
         if (!user) return null;
-        //what should return if user is not find
-        //are passwords hashed?
+
         const validPassword = await bcrypt.compare(oldPassword, user.password);
         if (validPassword) 
         {
-            user.password = newPassword;
-            await user.save();
+            await this.userRepository.updatePassword(user.uuid, this.hash(newPassword));
             return user;
         }
         else return null;
@@ -44,11 +38,14 @@ export default class PasswordService extends PasswordServicePort
     async setPassword(uuid, newPassword)
     {
         let user = await this.userRepository.selectByUuid(uuid);
-        let salt = bcrypt.genSalt(10);
-        newPassword = bcrypt.hash(newPassword, salt);
-        user.password = newPassword;
+        await this.userRepository.updatePassword(user.uuid, this.hash(newPassword));
         return user;
     }
 
+    hash(password)
+    {
+        let salt = bcrypt.genSalt(10);
+        return password = bcrypt.hash(password, salt);
+    }
 
 }

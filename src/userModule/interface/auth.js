@@ -4,32 +4,27 @@ const express = require('express');
 const router = express.Router();
 const _ = require('lodash');
 import passwordService from "../core/PasswordService";
-
+require('dotenv').config();
 
 
 router.post('/', async (req, res) =>
 {
-    const { error } = validate(req.body);
+    const { error } = validateData(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
     let service = new passwordService;
-
     let user = await service.logIn(req.body.email, req.body.password);
     if (!user) return res.status(400).send('Invalid email or password.');
     else 
     {
-        //pierwszy argument to to co chcemy zakodowac
-        const token = jwt.sign({ _id: user._id }, 'JWT_SECRET'); // jak zwrocic ten JWT secret 
-        //- mosh zrobil to przez biblioteke config do zrobienia
-
-        res.send(token);
+       const token = jwt.sign({uuid: user.uuid }, process.env.JWT_SECRET); 
+       // czy to tak zadziała? czy znajdzie mi ten process/env.JWT-SECRET?
+       //nie powinna ta byc metoda w User.js? jak na kursie u Mosha.
+       res.header('x-auth-token', token).send(_pick(user,['name','surname','email','roles']));
     }
-
-
-
 });
 
-function validate(req)
+function validateData(req)
 {
     const schema =
     {
