@@ -29,7 +29,7 @@ function validate(req)
         password: Joi.string().min(5).max(255).required(),
         newPassword: Joi.string().min(5).max(255).required()
     }
-
+    return Joi.validate(req, schema);
 }
 
 export default router;

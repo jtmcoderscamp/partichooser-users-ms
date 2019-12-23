@@ -9,9 +9,10 @@ import passwordService from "../core/PasswordService";
 
 router.post('/', async (req, res) =>
 {
-    let service = new passwordService;
     const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
+
+    let service = new passwordService;
 
     let user = await service.logIn(req.body.email, req.body.password);
     if (!user) return res.status(400).send('Invalid email or password.');
@@ -36,6 +37,7 @@ function validate(req)
         password: Joi.string().min(5).max(255).required()
     }
 
+    return Joi.validate(req, schema)
 }
 
 export default router;
