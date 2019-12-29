@@ -16,4 +16,9 @@ export default class User{
         this.roles = [...roles];
         this.password = password;
     }
+
+    static fromObject(base) {
+        if(base) return new User(base.uuid, base.name, base.surname, base.email, base.roles, base.password);
+        else return null;
+    }
 }
