@@ -26,7 +26,7 @@ import mongoose from "mongoose";
           required:true,
           enum: ['admin', 'mentor'] 
         },
-        pass:{
+        password:{
           type:String,
           //required:true;
         },

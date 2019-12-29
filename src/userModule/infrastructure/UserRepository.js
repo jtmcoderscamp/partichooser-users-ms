@@ -1,6 +1,8 @@
 import UserRepositoryPort from "../core/_UserRepositoryPort";
 import mongoose from "mongoose"
 import UserEntity from "./userModel"
+import User from "../core/domain/User";
+import UserDuplicationError from "../core/errors/UserDuplicationError";
 
 export default class UserRepository extends UserRepositoryPort{
     constructor(){
@@ -16,49 +18,59 @@ export default class UserRepository extends UserRepositoryPort{
         .sort('surname')
     }
       
-    async  showAllUsers() {
+    async  selectAll() {
         const users = await this._xFindAllUsers();
-        console.log(users);
+        return users.map( (user) => User.fromObject(user));
     }
 
-        
-    async  addNewUser(id,nameUser,surnameUser,emailUser,rolesUser, password){
-        const user = new UserEntity({
-          uuid:id,
-          name: nameUser,
-          surname: surnameUser,
-          email:emailUser,
-          roles: rolesUser,
-          pass:password
+    /**
+     * Adds new user to the database
+     * @param {User} user 
+     */
+    async  addNewUser(user){
+        const entity = new UserEntity({
+          uuid: user.uuid,
+          name: user.name,
+          surname: user.surname,
+          email: user.email,
+          roles: [...user.roles],
+          password: user.password
         });
-      
-        const result= await user.save();
-        console.log(result);
+        try{
+            const result= await entity.save();
+        }catch(error){
+            if (error.code==11000){
+                console.log(error);
+                throw new UserDuplicationError("Duplicate User data", error);
+            }
+            else throw error;
+        }
+        return User.fromObject(result);
     }
 
 
     async _selectByUuid(uuid) {
         return await UserEntity
-        .find({uuid:uuid})
-        .sort('surname')
+        .findOne({uuid:uuid})
     }
          
     async  selectByUuid(uuid) {
-        const users = await this._selectByUuid(uuid);
-        console.log(users);
+        const user = await this._selectByUuid(uuid);
+        return User.fromObject(user);
     }
+
     async _selectByEmail(email) {
         return await UserEntity
-        .find({email:email})
-        .sort('surname')
+        .findOne({email:email})
     }
+
     async selectByEmail(email) {
-        const users = await this._selectByEmail(email);
-        console.log(users);
+        const user = await this._selectByEmail(email);
+        return User.fromObject(user);
     }
 
     async updatePassword(uuid, password) {
-        const user = await UserEntity.findByIdAndUpdate(uuid,{$set:{pass:'password'}})
+        const user = await UserEntity.findOneAndUpdate({uuid:uuid},{$set:{pass:'password'}});
     }
 
 
