@@ -10,6 +10,8 @@ import UserEntity from "./userModule/infrastructure/userModel"
 import auth from "../src/userModule/interface/auth";
 import changePas from "../src/userModule/interface/changePas";
 import newPas from "../src/userModule/interface/newPas";
+import UserService from "./userModule/core/UserService";
+import UserRestController from "./userModule/interface/userRestController";
 
 dotenv.config();
 
@@ -27,27 +29,28 @@ const testApi = new TestRestController(testServiceImplementation);
 //wiring up the routes
 app.use(express.json());
 app.use("/tests",testApi.router);
-app.use('/api/auth', auth);
+/*app.use('/api/auth', auth);
 app.use('/api/changePas', changePas);
-app.use('/api/newPas', newPas);
+app.use('/api/newPas', newPas);*/
+
+//connect db
+mongoose.connect(process.env.DB_URI)
+  .then(() => console.log('Connected to MongoDB...'))
+  .catch(err => console.error('Could not connect to MongoDB...'));
+
+const userRepository = new UserRepository();
+const userService = new UserService(userRepository);
+const userRestController = new UserRestController(userService);
+
 
 app.listen(PORT, () => {
 	console.log(`Listening on port ${PORT}...`);
 });
 
-//connect db
-mongoose.connect(process.env.db)
-  .then(() => console.log('Connected to MongoDB...'))
-  .catch(err => console.error('Could not connect to MongoDB...'));
 
-const userRepository = new UserRepository();
-//userRepository.addUser('15','Kevin','Sam','KSWD@gmail.com','mentor');
+app.use('/users/', userRestController.router);
 
-//userRepository.showAllUsers();
- //userRepository.selectByEmail('2345mail@gmail.com');
- //userRepository.selectByUuid('12');
- userRepository.updatePassword('12','hasl123');
- userRepository.selectByUuid('12');
+
 
 
 
