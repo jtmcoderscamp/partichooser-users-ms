@@ -7,12 +7,16 @@ import MockTestRepository from "./testModule/infrastructure/MockTestRepository";
 import TestService from "./testModule/core/TestService";
 import UserRepository from "./userModule/infrastructure/UserRepository";
 import UserEntity from "./userModule/infrastructure/userModel"
+import auth from "../src/userModule/interface/auth";
+import changePas from "../src/userModule/interface/changePas";
+import newPas from "../src/userModule/interface/newPas";
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 const db =  process.env.db;
+
 
 //initialization of the example testModule
 const testRepositoryImplementation = new MockTestRepository();
@@ -21,7 +25,11 @@ const testApi = new TestRestController(testServiceImplementation);
 
 
 //wiring up the routes
+app.use(express.json());
 app.use("/tests",testApi.router);
+app.use('/api/auth', auth);
+app.use('/api/changePas', changePas);
+app.use('/api/newPas', newPas);
 
 app.listen(PORT, () => {
 	console.log(`Listening on port ${PORT}...`);
