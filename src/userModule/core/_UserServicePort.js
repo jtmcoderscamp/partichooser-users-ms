@@ -16,6 +16,14 @@ export default class UserServicePort {
     }
 
     /**
+     * A method that returns the details of all users in the database
+     * @returns {Promise<User[]>} 
+     */
+    async findAllUsers() {
+        throw new Error("Attempting to call an abstract method!");
+    }
+
+    /**
      * A method that returns the details of a specified user from the database
      * @param {String} uuid - UUID identifying the user
      * @returns {Promise<User>} 
