@@ -2,6 +2,7 @@ import UserServicePort from "./_UserServicePort";
 import UserRepositoryPort from "./_UserRepositoryPort";
 import uuid4 from "uuid/v4";
 import UserNotFoundError from "./errors/UserNotFoundError";
+import bcrypt from "bcryptjs";
 
 export default class UserService extends UserServicePort {
 
@@ -49,5 +50,60 @@ export default class UserService extends UserServicePort {
         if (user.uuid !== undefined) throw new Error("Can't add existing user.");
         user.uuid = uuid4();
         return this.userRepository.addNewUser(user);
+    }
+
+    /**
+     * A method that returns the data of the user trying to log in (as long as email and password combination is right)
+     * @param {string} email - the unique email of the user
+     * @param {string} password - the password (not yet hashed) of the user
+     * @returns {Promise<User>} 
+     */
+    async logIn(email, password) {
+        let user = await this.userRepository.selectByEmail(email);
+        if (!user) return null;
+
+        const validPassword = await bcrypt.compare(password, user.password);
+        if (validPassword) return user; 
+        else return null;
+    }
+
+    /**
+     * The method that performs user credentials validation and password change
+     * @param {string} email - the unique email of the user changing password
+     * @param {string} oldPassword - old password needed to confirm identity of the user changing password
+     * @param {string} newPassword - new password
+     * @returns {Promise<User>} 
+     */
+    async changePassword(email, oldPassword, newPassword) {
+        let user = await this.userRepository.selectByEmail(email);
+        if (!user) return null;
+
+        const validPassword = await bcrypt.compare(oldPassword, user.password);
+        if (validPassword) {
+            await this.userRepository.updatePassword(user.uuid, this.hash(newPassword));
+            return user;
+        }
+        else return null;
+    }
+
+    /**
+     * The method that forcefully sets a new password for the specified user
+     * @param {string} uuid - the UUID specifying the user
+     * @param {string} newPassword - new password
+     */
+    async setPassword(uuid, newPassword) {
+        let user = await this.userRepository.selectByUuid(uuid);
+        await this.userRepository.updatePassword(user.uuid, this.hash(newPassword));
+        return user;
+    }
+
+    /**
+     * A simple password-hashing helper function
+     * @param {string} password 
+     * @returns {string} hashed password
+     */
+    hash(password) {
+        let salt = bcrypt.genSalt(10);
+        return password = bcrypt.hash(password, salt);
     }
 }
