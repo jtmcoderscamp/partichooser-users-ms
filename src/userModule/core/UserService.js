@@ -3,6 +3,7 @@ import UserRepositoryPort from "./_UserRepositoryPort";
 import uuid4 from "uuid/v4";
 import UserNotFoundError from "./errors/UserNotFoundError";
 import bcrypt from "bcryptjs";
+import AuthenticationFailedError from "./errors/AuthenticationFailedError";
 
 export default class UserService extends UserServicePort {
 
@@ -16,7 +17,7 @@ export default class UserService extends UserServicePort {
      * @returns {Promise<User[]>} 
      */
     async findAllUsers() {
-        return this.userRepository.selectAll();
+        return (await this.userRepository.selectAll()).map( user => user.stripPassword());
     }
 
     /**
@@ -27,7 +28,7 @@ export default class UserService extends UserServicePort {
     async findUserByUuid(uuid) {
         const user = await this.userRepository.selectByUuid(uuid);
         if (!user) throw new UserNotFoundError(`User with uuid ${uuid} not found`);
-        return user;
+        return user.stripPassword();
     }
 
     /**
@@ -38,7 +39,7 @@ export default class UserService extends UserServicePort {
     async findUserByEmail(email) {
         const user = await this.userRepository.selectByEmail(email);
         if (!user) throw new UserNotFoundError(`User with email ${email} not found`);
-        return user;
+        return user.stripPassword();
     }
 
     /**
@@ -49,7 +50,8 @@ export default class UserService extends UserServicePort {
     async addNewUser(user) {
         if (user.uuid !== undefined) throw new Error("Can't add existing user.");
         user.uuid = uuid4();
-        return this.userRepository.addNewUser(user);
+        user.password = await this.hash("password");
+        return (await this.userRepository.addNewUser(user)).stripPassword();
     }
 
     /**
@@ -75,15 +77,15 @@ export default class UserService extends UserServicePort {
      * @returns {Promise<User>} 
      */
     async changePassword(email, oldPassword, newPassword) {
-        let user = await this.userRepository.selectByEmail(email);
-        if (!user) return null;
+        const user = await this.userRepository.selectByEmail(email);
+        if (!user) throw new AuthenticationFailedError("Failed to authenticate as password change requester");
 
         const validPassword = await bcrypt.compare(oldPassword, user.password);
-        if (validPassword) {
-            await this.userRepository.updatePassword(user.uuid, this.hash(newPassword));
-            return user;
-        }
-        else return null;
+        if (!validPassword) throw new AuthenticationFailedError("Failed to authenticate as password change requester");
+        
+        const updatedUser = await this.userRepository.updatePassword(user.uuid, await this.hash(newPassword));
+
+        return updatedUser.stripPassword();
     }
 
     /**
@@ -93,17 +95,17 @@ export default class UserService extends UserServicePort {
      */
     async setPassword(uuid, newPassword) {
         let user = await this.userRepository.selectByUuid(uuid);
-        await this.userRepository.updatePassword(user.uuid, this.hash(newPassword));
+        await this.userRepository.updatePassword(user.uuid, await this.hash(newPassword));
         return user;
     }
 
     /**
      * A simple password-hashing helper function
      * @param {string} password 
-     * @returns {string} hashed password
+     * @returns {Promise<string>} hashed password
      */
-    hash(password) {
-        let salt = bcrypt.genSalt(10);
+    async hash(password) {
+        let salt = await bcrypt.genSalt(10);
         return password = bcrypt.hash(password, salt);
     }
 }
