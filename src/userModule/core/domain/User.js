@@ -16,4 +16,17 @@ export default class User{
         this.roles = [...roles];
         this.password = password;
     }
+
+    /**
+     * Simple method removing password from the object and returning it
+     */
+    stripPassword(){
+        delete this.password;
+        return this;
+    }
+
+    static fromObject(base) {
+        if(base) return new User(base.uuid, base.name, base.surname, base.email, base.roles, base.password);
+        else return null;
+    }
 }

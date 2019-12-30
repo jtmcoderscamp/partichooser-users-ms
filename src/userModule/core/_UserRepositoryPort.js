@@ -1,3 +1,5 @@
+import User from "./domain/User";
+
 /**
  * An abstract class describing the expected behavior of TestRepository implementations
  */
@@ -6,6 +8,14 @@ export default class UserRepositoryPort {
         if (new.target === UserRepositoryPort) {
             throw new Error("Attempting to create an instance of an abstract class.");
         }
+    }
+
+    /**
+     * A method that retrieves all users from the database
+     * @returns {Promise<User[]>} 
+     */
+    async selectAll() {
+        throw new Error("Attempting to call an abstract method!");
     }
 
     /**
