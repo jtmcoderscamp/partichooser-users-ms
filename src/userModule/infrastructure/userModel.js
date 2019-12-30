@@ -9,17 +9,17 @@ import mongoose from "mongoose";
         name:{
           type:String,
           required:true,
-          minlength:3,
+          minlength:1,
         }, 
         surname: {
           type:String,
           required:true,
-          minlength:3,
+          minlength:1,
         }, 
         email:{
           type:String,
           unique:true,
-          minlength:4,
+          minlength:1,
         },
         roles:  { 
           type:[String],
