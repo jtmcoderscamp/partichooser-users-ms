@@ -5,6 +5,11 @@ import UserServicePort from "../core/_USerServicePort";
 import User from "../core/domain/User";
 import ValidationError from "../core/errors/ValidationError";
 import newUserSchema from "./requestValidation/newUserSchema";
+import extractAuthDetails from "./middlewares/extractAuthDetails";
+import authenticationDataSchema from "./requestValidation/authenticationDataSchema";
+import jwt from "jsonwebtoken";
+import _ from "lodash";
+import passwordChangeRequestSchema from "./requestValidation/passwordChangeRequestSchema";
 
 export default class UserRestController{
 
@@ -14,6 +19,40 @@ export default class UserRestController{
 
         //use the built-in json middleware to parse json requests
         this.router.use('/', express.json());
+
+        //use the custom middleware to extract authentication data from token
+        this.router.use('/', extractAuthDetails);
+
+        /**
+         * Authenticate user
+         */
+        this.router.post('/auth', asyncHandler(async (req, res) => {
+            const {error} = Joi.validate(req.body, authenticationDataSchema);
+            if (error) throw new ValidationError(error.details[0].message);
+
+            let user = await this._userService.logIn(req.body.email, req.body.password);
+            if (!user) throw new AuthenticationFailedError("Invalid email or password.");
+
+            const token = jwt.sign({ uuid: user.uuid, roles: user.roles }, process.env.JWT_SECRET);
+
+            res.status(200).header('x-auth-token', token).send(_.pick(user,['name','surname','email','roles']));
+        }));
+
+        /**
+         * Change password
+         */
+        this.router.put('/passwords', asyncHandler(async (req, res) => {
+            const { error } = Joi.validate(req.body, passwordChangeRequestSchema);
+            if (error) throw new ValidationError(error.details[0].message);
+
+            if (req.body.password===req.body.newPassword){
+                throw new ValidationError("New password and old password cannot be the same");
+            }
+
+            await this._userService.changePassword(req.body.email, req.body.password, req.body.newPassword);
+            
+            res.sendStatus(200);
+        }));
 
         /**
          * Get user specified by UUID
