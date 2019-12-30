@@ -38,6 +38,7 @@ export default class UserRepository extends UserRepositoryPort{
         });
         try{
             const result= await entity.save();
+            return User.fromObject(result);
         }catch(error){
             if (error.code==11000){
                 console.log(error);
@@ -45,7 +46,6 @@ export default class UserRepository extends UserRepositoryPort{
             }
             else throw error;
         }
-        return User.fromObject(result);
     }
 
 
@@ -70,7 +70,8 @@ export default class UserRepository extends UserRepositoryPort{
     }
 
     async updatePassword(uuid, password) {
-        const user = await UserEntity.findOneAndUpdate({uuid:uuid},{$set:{pass:'password'}});
+        const user = await UserEntity.findOneAndUpdate({uuid:uuid},{$set:{password: password}});
+        return User.fromObject(user);
     }
 
 
