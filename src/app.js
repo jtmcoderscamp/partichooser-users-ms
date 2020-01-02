@@ -27,6 +27,8 @@ app.listen(PORT, () => {
 	console.log(`Listening on port ${PORT}...`);
 });*/
 
+console.error("Reached the final error");
+
 
 
 
