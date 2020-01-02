@@ -1,6 +1,6 @@
 {
-  "name": "js-back-template",
-  "version": "1.0.0",
+  "name": "partichooser-users-microservice",
+  "version": "0.1.0",
   "description": "",
   "private": true,
   "type": "module",
