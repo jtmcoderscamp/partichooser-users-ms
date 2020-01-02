@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import UserRepository from "./userModule/infrastructure/UserRepository";
 import UserService from "./userModule/core/UserService";
-import UserRestController from "./userModule/interface/userRestController";
+import UserRestController from "./userModule/interface/UserRestController";
 
 /*dotenv.config();
 
