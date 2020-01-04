@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import UserRepository from "./userModule/infrastructure/UserRepository";
@@ -18,6 +19,9 @@ mongoose.connect(process.env.DB_URI)
 const userRepository = new UserRepository();
 const userService = new UserService(userRepository);
 const userRestController = new UserRestController(userService);
+
+//enable cors FOR EVERYTHING
+app.use(cors());
 
 //wiring up the routes
 app.use(express.json());
