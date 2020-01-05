@@ -36,7 +36,7 @@ export default class UserRestController{
 
             const token = jwt.sign({ uuid: user.uuid, roles: user.roles }, process.env.JWT_SECRET);
 
-            res.status(200).header('x-auth-token', token).send(_.pick(user,['name','surname','email','roles']));
+            res.status(200).header('x-auth-token', token).send(_.pick(user,['uuid','name','surname','email','roles']));
         }));
 
         /**
