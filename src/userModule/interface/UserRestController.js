@@ -4,6 +4,7 @@ import Joi from "joi";
 import UserServicePort from "../core/_UserServicePort";
 import User from "../core/domain/User";
 import ValidationError from "../core/errors/ValidationError";
+import AuthenticationFailedError from "../core/errors/AuthenticationFailedError";
 import newUserSchema from "./requestValidation/newUserSchema";
 import extractAuthDetails from "./middlewares/extractAuthDetails";
 import authenticationDataSchema from "./requestValidation/authenticationDataSchema";
