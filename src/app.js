@@ -21,7 +21,9 @@ const userService = new UserService(userRepository);
 const userRestController = new UserRestController(userService);
 
 //enable cors FOR EVERYTHING
-app.use(cors());
+app.use(cors({
+  exposedHeaders: ['x-auth-token'],
+}));
 
 //wiring up the routes
 app.use(express.json());
